@@ -1,0 +1,37 @@
+services:
+
+  service-discovery:
+    container_name: service-discovery
+    build:
+      context: service-discovery
+      dockerfile: Dockerfile
+    image: service-discovery:latest
+
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: api-gateway
+      dockerfile: Dockerfile
+    image: api-gateway:latest
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://service-discovery:8761/eureka/"}}}}'
+
+  service-one:
+    container_name: service-one
+    build:
+      context: service-one
+      dockerfile: Dockerfile
+    image: service-one:latest
+    environment:
+      SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://service-discovery:8761/eureka/"}}}}'
+
+  service-two:
+    container_name: service-two
+    build:
+      context: service-two
+      dockerfile: Dockerfile
+    image: service-two:latest
+    environment:
+      SPRING_APPLICATION_JSON: '{"eureka":{"client":{"serviceUrl":{"defaultZone":"http://service-discovery:8761/eureka/"}}}}'
